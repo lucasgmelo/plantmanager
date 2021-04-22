@@ -13,30 +13,36 @@ import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 
 import wateringImg from "../assets/watering.png";
+import { useNavigation } from "@react-navigation/native";
 
 export function Welcome() {
+  const navigation = useNavigation();
+
+  function handleStart() {
+    navigation.navigate("UserIdentification");
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-        <View style={styles.wrapper}>
-      <Text style={styles.title}>
-        Gerencie {"\n"}
-        suas plantas de{"\n"}
-        forma fácil
-      </Text>
-      <Image
-        source={wateringImg}
-        style={styles.image}
-        resizeMode='contain'
-      />
-      <Text style={styles.subtitle}>
-        Não esqueça mais de regar suas plantas. Nós cuidamos de lembrar você
-        sempre que precisar.
-      </Text>
-      <TouchableOpacity activeOpacity={0.7} style={styles.button}>
-        <Feather name="chevron-right" style={styles.buttonIcon} />
-      </TouchableOpacity>
+      <View style={styles.wrapper}>
+        <Text style={styles.title}>
+          Gerencie {"\n"}
+          suas plantas de{"\n"}
+          forma fácil
+        </Text>
+        <Image source={wateringImg} style={styles.image} resizeMode="contain" />
+        <Text style={styles.subtitle}>
+          Não esqueça mais de regar suas plantas. Nós cuidamos de lembrar você
+          sempre que precisar.
+        </Text>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.button}
+          onPress={handleStart}
+        >
+          <Feather name="chevron-right" style={styles.buttonIcon} />
+        </TouchableOpacity>
       </View>
-
     </SafeAreaView>
   );
 }
@@ -70,7 +76,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     paddingHorizontal: 20,
     color: colors.heading,
-    fontFamily: fonts.text
+    fontFamily: fonts.text,
   },
   button: {
     backgroundColor: colors.green,
