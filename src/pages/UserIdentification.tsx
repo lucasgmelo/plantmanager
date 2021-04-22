@@ -8,6 +8,8 @@ import {
   View,
   KeyboardAvoidingView,
   Platform,
+  TouchableWithoutFeedback,
+  Keyboard
 } from "react-native";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
@@ -39,6 +41,7 @@ export function UserIdentification() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}
@@ -65,6 +68,7 @@ export function UserIdentification() {
           </View>
         </View>
       </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }
