@@ -5,8 +5,8 @@ import {useFonts, Inter_400Regular, Inter_600SemiBold } from '@expo-google-fonts
 
 export default function App() {
   const [ fontsLoaded ] = useFonts({
-    Inter_400Regular,
-    Inter_600SemiBold,
+   Inter_400Regular,
+   Inter_600SemiBold
   });
 
   if(!fontsLoaded) return (
