@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginTop: getStatusBarHeight(),
-    padding: 20,
+    padding: 30,
   },
   greeting: {
     fontSize: 32,
