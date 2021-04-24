@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import colors from "../../styles/colors";
@@ -12,28 +13,12 @@ interface EnviromentProps {
 }
 
 export function PlantSelect() {
-  const [enviroments, setEnviroments] = useState<EnviromentProps[]>([]);
+  const [environments, setEnvironments] = useState<EnviromentProps[]>([]);
 
   useEffect(() => {
     async function fetchEnviroment() {
-      try {
-        const { data } = await api.get("/plants_enviroments");
-        console.log(data)
-        setEnviroments([
-          {
-            key: "all",
-            title: "Todos",
-          },
-          ...data,
-        ]);
-      } catch {
-        setEnviroments([
-          {
-            key: "all",
-            title: "Todos",
-          },
-        ]);
-      }
+      const { data } = await axios.get("http://192.168.5.80:4444/plants_environments");
+      setEnvironments(data);
     }
 
     fetchEnviroment();
@@ -48,8 +33,14 @@ export function PlantSelect() {
       </View>
       <View>
         <FlatList
-          data={enviroments}
-          renderItem={({ item }) => <EnviromentButton title={item.title} />}
+          data={environments}
+          renderItem={({ item }) => (
+            <EnviromentButton 
+            key={item.key} 
+            title={item.title} 
+            active
+            />
+          )}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.enviromentList}
