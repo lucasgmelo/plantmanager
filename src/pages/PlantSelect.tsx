@@ -32,7 +32,7 @@ export function PlantSelect() {
   useEffect(() => {
     async function fetchEnviroment() {
       const { data } = await axios.get(
-        "http://192.168.5.80:4444/plants_environments"
+        "http://192.168.5.80:4444/plants_environments?_sort=title&_order=asc"
       );
       setEnvironments([
         {
@@ -48,7 +48,7 @@ export function PlantSelect() {
 
   useEffect(() => {
     async function fetchPlants() {
-      const { data } = await axios.get("http://192.168.5.80:4444/plants");
+      const { data } = await axios.get("http://192.168.5.80:4444/plants?_sort=name&_order=asc");
       setPlants(data);
     }
 
