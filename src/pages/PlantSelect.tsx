@@ -1,12 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import { EnviromentButton } from "../components/EnviromentButton";
 import { Header } from "../components/Header";
 import { PlantCardPrimary } from "../components/PlantCardPrimary";
-import { Load } from '../components/Load'
+import { Load } from "../components/Load";
 
 interface EnviromentProps {
   key: string;
@@ -37,14 +37,43 @@ export function PlantSelect() {
   const [loadingMore, setLoadingMore] = useState(true);
   const [loadedAll, setLoadedAll] = useState(false);
 
+  async function fetchPlants() {
+    const { data } = await axios.get(
+      `http://192.168.5.80:4444/plants?_sort=name&_order=asc&_page=${page}&_limit=8`
+    );
+
+    if (!data) return setLoading(true);
+
+    if (page > 1) {
+      setPlants((oldValue) => [...oldValue, ...data]);
+      setFilteredPlants((oldValue) => [...oldValue, ...data]);
+    } else {
+      setPlants(data);
+      setFilteredPlants(data);
+    }
+
+    setLoading(false);
+    setLoadingMore(false);
+  }
+
   function handleEnviromentSelected(currentEnviroment: string) {
     setEnviromentSelected(currentEnviroment);
 
     if (currentEnviroment === "all") return setFilteredPlants(plants);
 
-    const filtered = plants.filter(plant => plant.environments.includes(currentEnviroment))
+    const filtered = plants.filter((plant) =>
+      plant.environments.includes(currentEnviroment)
+    );
 
-    setFilteredPlants(filtered)
+    setFilteredPlants(filtered);
+  }
+
+  function handleFetchMore(distance: number) {
+    if (distance < 1) return;
+
+    setLoadingMore(true);
+    setPage((oldValue) => oldValue + 1);
+    fetchPlants();
   }
 
   useEffect(() => {
@@ -65,29 +94,10 @@ export function PlantSelect() {
   }, []);
 
   useEffect(() => {
-    async function fetchPlants() {
-      const { data } = await axios.get(
-        `http://192.168.5.80:4444/plants?_sort=name&_order=asc&_page=${page}&_limit=8`
-      );
-
-      if(!data) return setLoading(true);
-
-      if(page > 1){
-        setPlants(oldValue => [...oldValue, ...data])
-        setFilteredPlants(oldValue => [...oldValue, ...data])
-      } else {
-        setPlants(data);
-        setFilteredPlants(data);
-      }
-
-      setLoading(false);
-      setLoadingMore(false);
-    }
-
     fetchPlants();
   }, []);
 
-  if(loading) return <Load />
+  if (loading) return <Load />;
   return (
     <View style={styles.container}>
       <Header />
@@ -120,6 +130,16 @@ export function PlantSelect() {
           )}
           showsVerticalScrollIndicator={false}
           numColumns={2}
+          onEndReachedThreshold={0.1}
+          onEndReached={({ distanceFromEnd }) =>
+            handleFetchMore(distanceFromEnd)
+          }
+          ListFooterComponent={
+            loadingMore ?
+            <ActivityIndicator 
+            color={colors.green}
+            /> : <></>
+          }
         />
       </View>
     </View>
