@@ -18,7 +18,12 @@ export function PlantSelect() {
   useEffect(() => {
     async function fetchEnviroment() {
       const { data } = await axios.get("http://192.168.5.80:4444/plants_environments");
-      setEnvironments(data);
+      setEnvironments([{
+        key: 'all',
+        title: 'Todos'
+      },
+      ...data
+    ]);
     }
 
     fetchEnviroment();
@@ -38,7 +43,6 @@ export function PlantSelect() {
             <EnviromentButton 
             key={item.key} 
             title={item.title} 
-            active
             />
           )}
           horizontal
