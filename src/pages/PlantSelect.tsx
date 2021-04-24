@@ -28,12 +28,18 @@ interface PlantProps {
 export function PlantSelect() {
   const [environments, setEnvironments] = useState<EnviromentProps[]>([]);
   const [plants, setPlants] = useState<PlantProps[]>([]);
-  const [enviromentSelected, setEnviromentSelected] = useState('all');
+  const [enviromentSelected, setEnviromentSelected] = useState("all");
+  const [filteredPlants, setFilteredPlants] = useState<PlantProps[]>([]);
 
   function handleEnviromentSelected(currentEnviroment: string) {
-    setEnviromentSelected(currentEnviroment)
-  }
+    setEnviromentSelected(currentEnviroment);
 
+    if (currentEnviroment === "all") return setFilteredPlants(plants);
+
+    const filtered = plants.filter(plant => plant.environments.includes(currentEnviroment))
+
+    setFilteredPlants(filtered)
+  }
 
   useEffect(() => {
     async function fetchEnviroment() {
@@ -54,7 +60,9 @@ export function PlantSelect() {
 
   useEffect(() => {
     async function fetchPlants() {
-      const { data } = await axios.get("http://192.168.5.80:4444/plants?_sort=name&_order=asc");
+      const { data } = await axios.get(
+        "http://192.168.5.80:4444/plants?_sort=name&_order=asc"
+      );
       setPlants(data);
     }
 
@@ -72,9 +80,11 @@ export function PlantSelect() {
         <FlatList
           data={environments}
           renderItem={({ item }) => (
-            <EnviromentButton key={item.key} title={item.title} 
-            active={item.key === enviromentSelected}
-            onPress={() => handleEnviromentSelected(item.key)}
+            <EnviromentButton
+              key={item.key}
+              title={item.title}
+              active={item.key === enviromentSelected}
+              onPress={() => handleEnviromentSelected(item.key)}
             />
           )}
           horizontal
@@ -85,7 +95,7 @@ export function PlantSelect() {
 
       <View style={styles.plants}>
         <FlatList
-          data={plants}
+          data={filteredPlants}
           renderItem={({ item }) => (
             <PlantCardPrimary key={item.id} data={item} />
           )}
