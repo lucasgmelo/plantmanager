@@ -6,6 +6,7 @@ import fonts from "../../styles/fonts";
 import { EnviromentButton } from "../components/EnviromentButton";
 import { Header } from "../components/Header";
 import { PlantCardPrimary } from "../components/PlantCardPrimary";
+import { Load } from '../components/Load'
 
 interface EnviromentProps {
   key: string;
@@ -30,6 +31,11 @@ export function PlantSelect() {
   const [plants, setPlants] = useState<PlantProps[]>([]);
   const [enviromentSelected, setEnviromentSelected] = useState("all");
   const [filteredPlants, setFilteredPlants] = useState<PlantProps[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const [page, setPage] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(true);
+  const [loadedAll, setLoadedAll] = useState(false);
 
   function handleEnviromentSelected(currentEnviroment: string) {
     setEnviromentSelected(currentEnviroment);
@@ -61,14 +67,27 @@ export function PlantSelect() {
   useEffect(() => {
     async function fetchPlants() {
       const { data } = await axios.get(
-        "http://192.168.5.80:4444/plants?_sort=name&_order=asc"
+        `http://192.168.5.80:4444/plants?_sort=name&_order=asc&_page=${page}&_limit=8`
       );
-      setPlants(data);
+
+      if(!data) return setLoading(true);
+
+      if(page > 1){
+        setPlants(oldValue => [...oldValue, ...data])
+        setFilteredPlants(oldValue => [...oldValue, ...data])
+      } else {
+        setPlants(data);
+        setFilteredPlants(data);
+      }
+
+      setLoading(false);
+      setLoadingMore(false);
     }
 
     fetchPlants();
   }, []);
 
+  if(loading) return <Load />
   return (
     <View style={styles.container}>
       <Header />

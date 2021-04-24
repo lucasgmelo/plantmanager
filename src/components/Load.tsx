@@ -7,7 +7,7 @@ import loadAnimation from '../assets/load.json'
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 
-export function Header() {
+export function Load() {
   return (
     <View style={styles.container}>
         <LottieView 
