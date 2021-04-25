@@ -24,7 +24,7 @@ import fonts from "../../styles/fonts";
 
 import { useRoute } from "@react-navigation/core";
 import { format, isBefore } from "date-fns";
-import { PlantProps } from "../libs/storage";
+import { PlantProps, savePlant } from "../libs/storage";
 
 interface Params {
   plant: PlantProps;
@@ -52,6 +52,17 @@ export function PlantSave() {
     }
 
     if (dateTime) setSelectedDateTime(dateTime);
+  }
+
+  async function handleSave(){
+      try {
+        await savePlant({
+            ...plant,
+            dateTimeNotification: selectedDateTime,
+        })
+      } catch {
+          Alert.alert('Não foi possivel salvar.')
+      }
   }
 
   return (
@@ -88,7 +99,7 @@ export function PlantSave() {
             </Text>
           </TouchableOpacity>
         )}
-        <Button title="Cadastrar planta" />
+        <Button title="Cadastrar planta" onPress={handleSave}/>
       </View>
     </View>
   );
