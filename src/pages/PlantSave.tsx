@@ -46,18 +46,17 @@ export function PlantSave() {
   return (
     <View style={styles.container}>
       <View style={styles.plantInfo}>
-        <SvgFromUri uri="" height={150} width={150} />
-        <Text style={styles.plantName}>Nome da Planta</Text>
+        <SvgFromUri uri={plant.photo} height={150} width={150} />
+        <Text style={styles.plantName}>{plant.name}</Text>
         <Text style={styles.plantAbout}>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Illum quasi
-          minima nemo harum error, dolorem qui distinctio repellendus facilis.
+          {plant.about}
         </Text>
       </View>
       <View style={styles.controller}>
         <View style={styles.tipContainer}>
           <Image source={waterDrop} style={styles.tipImage} />
           <Text style={styles.tipText}>
-            Lorem ipsum dolor sit amet. quam? wtf men hahahahah
+            {plant.water_tips}
           </Text>
         </View>
         <Text style={styles.alertLabel}>
