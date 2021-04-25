@@ -40,6 +40,18 @@ export async function savePlant(plant: PlantProps): Promise<void> {
       Math.ceil((now.getTime() - nextTime.getTime()) / 1000)
     );
 
+    const settings = await Notifications.getPermissionsAsync();
+        if(!settings.granted){
+            await Notifications.requestPermissionsAsync({
+            ios: {
+                allowAlert: true,
+                allowBadge: true,
+                allowSound: true,
+                allowAnnouncements: true,
+            },
+            });
+        }
+
     const notificationId = await Notifications.scheduleNotificationAsync({
       content: {
         title: 'Heeey, 🌱',
