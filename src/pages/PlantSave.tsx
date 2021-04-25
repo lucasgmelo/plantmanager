@@ -13,7 +13,7 @@ import {
   getBottomSpace,
   getStatusBarHeight,
 } from "react-native-iphone-x-helper";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import DateTimePicker, { Event } from "@react-native-community/datetimepicker";
 import { SvgFromUri } from "react-native-svg";
 
 import waterDrop from "../assets/waterdrop.png";
@@ -23,6 +23,7 @@ import { Button } from "../components/Button";
 import fonts from "../../styles/fonts";
 
 import { useRoute } from "@react-navigation/core";
+import { isBefore } from "date-fns";
 
 interface Params {
   plant: {
@@ -40,28 +41,47 @@ interface Params {
 }
 
 export function PlantSave() {
+  const [selectedDateTime, setSelectedDateTime] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(Platform.OS == "ios");
+
   const route = useRoute();
   const { plant } = route.params as Params;
-  
+
+  function handleChangeTime(event: Event, dateTime: Date | undefined) {
+    if (Platform.OS == "android") {
+      setShowDatePicker((oldState) => !oldState);
+    }
+
+    if (dateTime && isBefore(dateTime, new Date())) {
+      setSelectedDateTime(new Date());
+      return Alert.alert("Escolha uma hora no futuro");
+    }
+
+    if (dateTime) setSelectedDateTime(dateTime);
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.plantInfo}>
         <SvgFromUri uri={plant.photo} height={150} width={150} />
         <Text style={styles.plantName}>{plant.name}</Text>
-        <Text style={styles.plantAbout}>
-          {plant.about}
-        </Text>
+        <Text style={styles.plantAbout}>{plant.about}</Text>
       </View>
       <View style={styles.controller}>
         <View style={styles.tipContainer}>
           <Image source={waterDrop} style={styles.tipImage} />
-          <Text style={styles.tipText}>
-            {plant.water_tips}
-          </Text>
+          <Text style={styles.tipText}>{plant.water_tips}</Text>
         </View>
         <Text style={styles.alertLabel}>
           Escolha o melhor horário para ser lembrado:
         </Text>
+
+        <DateTimePicker
+          value={selectedDateTime}
+          mode="time"
+          display="spinner"
+          onChange={handleChangeTime}
+        />
 
         <Button title="Cadastrar planta" />
       </View>
@@ -79,6 +99,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 30,
     paddingVertical: 50,
+    justifyContent: "center",
     alignItems: "center",
     backgroundColor: colors.shape,
   },
