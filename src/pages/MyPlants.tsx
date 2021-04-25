@@ -1,17 +1,15 @@
-// import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
-import colors from "../../styles/colors";
-import fonts from "../../styles/fonts";
-import { Button } from "../components/Button";
-import { Header } from "../components/Header";
-
-import waterDrop from "../assets/waterdrop.png";
-import { FlatList } from "react-native-gesture-handler";
-import { loadPlant, PlantProps } from "../libs/storage";
 import { formatDistance } from "date-fns";
 import { pt } from "date-fns/locale";
-import { PlantCardSecondary } from "../components/PlantCardPrimary";
+import React, { useEffect, useState } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
+import colors from "../../styles/colors";
+import fonts from "../../styles/fonts";
+import waterDrop from "../assets/waterdrop.png";
+import { Header } from "../components/Header";
+import { PlantCardSecondary } from "../components/PlantCardSecondary";
+import { loadPlant, PlantProps } from "../libs/storage";
+
 
 export function MyPlants() {
   const [plants, setPlants] = useState<PlantProps[]>([]);
