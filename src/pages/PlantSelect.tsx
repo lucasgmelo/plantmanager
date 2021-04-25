@@ -35,7 +35,6 @@ export function PlantSelect() {
 
   const [page, setPage] = useState(1);
   const [loadingMore, setLoadingMore] = useState(true);
-  const [loadedAll, setLoadedAll] = useState(false);
 
   async function fetchPlants() {
     const { data } = await axios.get(
@@ -110,7 +109,7 @@ export function PlantSelect() {
           data={environments}
           renderItem={({ item }) => (
             <EnviromentButton
-              key={item.key}
+              key={String(item.key)}
               title={item.title}
               active={item.key === enviromentSelected}
               onPress={() => handleEnviromentSelected(item.key)}
@@ -126,7 +125,7 @@ export function PlantSelect() {
         <FlatList
           data={filteredPlants}
           renderItem={({ item }) => (
-            <PlantCardPrimary key={item.id} data={item} />
+            <PlantCardPrimary key={String(item.id)} data={item} />
           )}
           showsVerticalScrollIndicator={false}
           numColumns={2}
