@@ -84,8 +84,8 @@ export function PlantSelect() {
     fetchPlants();
   }
 
-  function handlePlantSelect() {
-    navigation.navigate('PlantSave');
+  function handlePlantSelect(plant: PlantProps) {
+    navigation.navigate('PlantSave', { plant });
   }
 
   useEffect(() => {
@@ -141,7 +141,7 @@ export function PlantSelect() {
             <PlantCardPrimary
               key={String(item.id)}
               data={item}
-              onPress={() => handlePlantSelect()}
+              onPress={() => handlePlantSelect(item)}
             />
           )}
           showsVerticalScrollIndicator={false}
