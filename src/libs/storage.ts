@@ -48,10 +48,10 @@ export async function savePlant(plant: PlantProps): Promise<void> {
         priority: Notifications.AndroidNotificationPriority.HIGH,
         data: {
           plant
-        },
+        }
       },
       trigger: {
-        seconds: seconds < 60 ? 60 : seconds,
+        seconds: (seconds < 60) ? 60 : seconds,
         repeats: true,
       }
     })
