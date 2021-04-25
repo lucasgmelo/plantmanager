@@ -1,12 +1,19 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import { EnviromentButton } from "../components/EnviromentButton";
 import { Header } from "../components/Header";
 import { PlantCardPrimary } from "../components/PlantCardPrimary";
 import { Load } from "../components/Load";
+import { useNavigation } from "@react-navigation/native";
 
 interface EnviromentProps {
   key: string;
@@ -35,6 +42,8 @@ export function PlantSelect() {
 
   const [page, setPage] = useState(1);
   const [loadingMore, setLoadingMore] = useState(true);
+
+  const navigation = useNavigation();
 
   async function fetchPlants() {
     const { data } = await axios.get(
@@ -73,6 +82,10 @@ export function PlantSelect() {
     setLoadingMore(true);
     setPage((oldValue) => oldValue + 1);
     fetchPlants();
+  }
+
+  function handlePlantSelect() {
+    navigation.navigate('PlantSave');
   }
 
   useEffect(() => {
@@ -125,7 +138,11 @@ export function PlantSelect() {
         <FlatList
           data={filteredPlants}
           renderItem={({ item }) => (
-            <PlantCardPrimary key={String(item.id)} data={item} />
+            <PlantCardPrimary
+              key={String(item.id)}
+              data={item}
+              onPress={() => handlePlantSelect()}
+            />
           )}
           showsVerticalScrollIndicator={false}
           numColumns={2}
@@ -134,10 +151,7 @@ export function PlantSelect() {
             handleFetchMore(distanceFromEnd)
           }
           ListFooterComponent={
-            loadingMore ?
-            <ActivityIndicator 
-            color={colors.green}
-            /> : <></>
+            loadingMore ? <ActivityIndicator color={colors.green} /> : <></>
           }
         />
       </View>
