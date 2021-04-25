@@ -23,7 +23,7 @@ import { Button } from "../components/Button";
 import fonts from "../../styles/fonts";
 
 import { useRoute } from "@react-navigation/core";
-import { isBefore } from "date-fns";
+import { format, isBefore } from "date-fns";
 
 interface Params {
   plant: {
@@ -46,6 +46,10 @@ export function PlantSave() {
 
   const route = useRoute();
   const { plant } = route.params as Params;
+
+  function handleOpenDatetimePickerForAndroid(){
+      setShowDatePicker(oldState => !oldState)
+  }
 
   function handleChangeTime(event: Event, dateTime: Date | undefined) {
     if (Platform.OS == "android") {
@@ -76,13 +80,24 @@ export function PlantSave() {
           Escolha o melhor horário para ser lembrado:
         </Text>
 
-        <DateTimePicker
-          value={selectedDateTime}
-          mode="time"
-          display="spinner"
-          onChange={handleChangeTime}
-        />
+        {showDatePicker && (
+          <DateTimePicker
+            value={selectedDateTime}
+            mode="time"
+            display="spinner"
+            onChange={handleChangeTime}
+          />
+        )}
 
+        {Platform.OS === "android" && (
+          <TouchableOpacity 
+          style={styles.dateTimePickerButton}
+          onPress={handleOpenDatetimePickerForAndroid}>
+            <Text style={styles.dateTimePickerText}>
+                {`Mudar ${format(selectedDateTime, `HH:mm`)}}`}
+            </Text>
+          </TouchableOpacity>
+        )}
         <Button title="Cadastrar planta" />
       </View>
     </View>
@@ -151,4 +166,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginBottom: 5,
   },
+  dateTimePickerButton: {
+    width: '100%',
+    alignItems: "center",
+    paddingVertical: 40
+  },
+  dateTimePickerText: {
+    color: colors.heading,
+    fontSize: 24,
+    fontFamily: fonts.text,
+  }
 });
