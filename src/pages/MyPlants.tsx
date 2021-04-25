@@ -7,6 +7,7 @@ import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import waterDrop from "../assets/waterdrop.png";
 import { Header } from "../components/Header";
+import { Load } from "../components/Load";
 import { PlantCardSecondary } from "../components/PlantCardSecondary";
 import { loadPlant, PlantProps } from "../libs/storage";
 
@@ -35,6 +36,8 @@ export function MyPlants() {
     loadStorageData();
     setLoading(false);
   }, []);
+
+  if (loading) return <Load />;
 
   return (
     <View style={styles.container}>
@@ -66,7 +69,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 30,
-    paddingTop: 50,
     backgroundColor: colors.background,
   },
   spotlight: {
