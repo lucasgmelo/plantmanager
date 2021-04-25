@@ -10,7 +10,6 @@ import { Header } from "../components/Header";
 import { PlantCardSecondary } from "../components/PlantCardSecondary";
 import { loadPlant, PlantProps } from "../libs/storage";
 
-
 export function MyPlants() {
   const [plants, setPlants] = useState<PlantProps[]>([]);
   const [loading, setLoading] = useState(true);
