@@ -23,6 +23,7 @@
     "expo-app-loading": "^1.0.3",
     "expo-cli": "^4.4.3",
     "expo-font": "~9.1.0",
+    "expo-notifications": "~0.11.6",
     "expo-status-bar": "~1.0.4",
     "global": "^4.4.0",
     "json-server": "^0.16.3",
