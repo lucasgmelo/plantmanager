@@ -22,7 +22,7 @@ import colors from "../../styles/colors";
 import { Button } from "../components/Button";
 import fonts from "../../styles/fonts";
 
-import { useRoute } from "@react-navigation/core";
+import { useNavigation, useRoute } from "@react-navigation/core";
 import { format, isBefore } from "date-fns";
 import { PlantProps, savePlant } from "../libs/storage";
 
@@ -36,6 +36,7 @@ export function PlantSave() {
 
   const route = useRoute();
   const { plant } = route.params as Params;
+  const navigation = useNavigation();
 
   function handleOpenDatetimePickerForAndroid(){
       setShowDatePicker(oldState => !oldState)
@@ -60,6 +61,14 @@ export function PlantSave() {
             ...plant,
             dateTimeNotification: selectedDateTime,
         })
+
+        navigation.navigate("Confirmation", {
+          title: 'Tudo certo',
+          subtitle: 'Fique tranquilo que sempre vamos lembrar você de cuidar da sua plantinha com muito cuidado.',
+          icon: 'hug',
+          buttonTitle: "Muito obrigado :D",
+          nextScreen: 'MyPlants'
+        });
       } catch {
           Alert.alert('Não foi possivel salvar.')
       }
