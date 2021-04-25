@@ -12,47 +12,49 @@ import { loadPlant, PlantProps } from "../libs/storage";
 import { formatDistance } from "date-fns";
 import { pt } from "date-fns/locale";
 
-
 export function MyPlants() {
-    const [plants, setPlants] = useState<PlantProps[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [nextWatered, setnextWatered] = useState('');
+  const [plants, setPlants] = useState<PlantProps[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [nextWatered, setnextWatered] = useState("");
 
-    useEffect(() => {
-        async function loadStorageData(){
-            const plantsStoraged = await loadPlant();
+  useEffect(() => {
+    async function loadStorageData() {
+      const plantsStoraged = await loadPlant();
 
-            const nextTime = formatDistance(
-                new Date(plantsStoraged[0].dateTimeNotification).getTime(),
-                new Date().getTime(),
-                { locale: pt}
-            );
+      const nextTime = formatDistance(
+        new Date(plantsStoraged[0].dateTimeNotification).getTime(),
+        new Date().getTime(),
+        { locale: pt }
+      );
 
-            setnextWatered(`
-            Não esqueça de regar a ${plantsStoraged[0].name} às ${nextTime} horas`)
-        }
+      setnextWatered(`Não esqueça de regar a ${plantsStoraged[0].name} em ${nextTime}`);
 
-        loadStorageData();
-    }, []);
+      setPlants(plantsStoraged);
+    }
+
+    loadStorageData();
+    setLoading(false);
+  }, []);
 
   return (
     <View style={styles.container}>
       <Header />
 
       <View style={styles.spotlight}>
-        <Image styles={styles.spotlightImage} source={waterDrop} />
-        <Text style={styles.spotlightText}>qualquer coisa</Text>
+        <Image style={styles.spotlightImage} source={waterDrop} />
+        <Text style={styles.spotlightText}>{nextWatered}</Text>
       </View>
 
       <View style={styles.plants}>
-        <Text style={styles.plantsTitle}>
-            Próximas a serem regadas
-        </Text>
+        <Text style={styles.plantsTitle}>Próximas a serem regadas</Text>
 
-        <FlatList 
-        data={}
+        <FlatList
+          data={plants}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({ item }) => <Text>Elemento</Text>}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ flex: 1 }}
         />
-
       </View>
     </View>
   );
@@ -67,34 +69,34 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     backgroundColor: colors.background,
   },
-  content: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    paddingHorizontal: 20,
+  spotlight: {
+      backgroundColor: colors.blue_light,
+      paddingHorizontal: 20,
+      borderRadius: 20,
+      height: 110,
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
   },
-  title: {
-    fontSize: 22,
-    fontFamily: fonts.heading,
-    textAlign: "center",
-    color: colors.heading,
-    lineHeight: 38,
-    marginTop: 15,
+  spotlightImage: {
+    width: 60,
+    height: 60
   },
-  subtitle: {
-    fontFamily: fonts.text,
-    textAlign: "center",
-    fontSize: 17,
-    paddingVertical: 10,
-    color: colors.heading,
+  spotlightText: {
+      flex: 1,
+      color: colors.blue,
+      padding: 20,
+      textAlign: 'justify',
+      fontSize: 14,
   },
-  emoji: {
-    fontSize: 78,
+  plants: {
+      flex: 1,
+      width: '100%',
   },
-  footer: {
-    width: "100%",
-    marginTop: 20,
-    paddingHorizontal: 50,
-  },
+  plantsTitle: {
+      fontSize: 24,
+      fontFamily: fonts.heading,
+      color: colors.heading,
+      marginVertical: 20,
+  }
 });
